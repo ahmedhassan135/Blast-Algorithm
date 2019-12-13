@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1576256413 source:c:\users\ahmed\desktop\blast algorithm\main.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+
