@@ -5,10 +5,8 @@
 
 using namespace std;
 
-	class LinkList
-	{
-	private:
-		struct node
+
+struct node
 		{
 			string seq;
 			string name;
@@ -17,10 +15,15 @@ using namespace std;
 			node *next;
 		};
 
+	class LinkList
+	{
+	    public:
 
-	public:
+
 		node *head = NULL;
 		node *tail = NULL;
+
+		int length = 0;
 
 		node *insert_node(string Seq, string Name, int Start, int Ending)
 		{
@@ -37,16 +40,26 @@ using namespace std;
 			{
 				head = newNode;
 				tail = newNode;
+				length = 1;
 				return newNode;
 			}
 
 
 			tail->next = newNode;
 			tail = newNode;
+			length++;
 			return newNode;
 		}
 
+        node gotonode(int index)
+        {
+            node *tempptr = head;
+            for (int i=1; i<=index;i++)
+            tempptr = tempptr->next;
 
+            return *tempptr;
+
+        }
 
 		void print_all_records()
 		{
@@ -57,11 +70,11 @@ using namespace std;
 				cout << tempptr->seq << ", " << tempptr->name <<", "<<tempptr->start<<", "<<tempptr->ending<<endl;
 				tempptr = tempptr->next;
 			}
+			cout<<"length is " << length;
 		}
 
 
 	};
-
 
 
 int main()
@@ -90,10 +103,7 @@ int main()
                     for (int i=0; i < (seq.length()-k+1); i++)
                     {
                         string kmer = "";
-                        for (int j=i; j <= i+k-1; j++)
-                        {
-                            kmer = kmer + seq[j];
-                        }
+                        kmer = seq.substr(i, k);
                         myfile2 << kmer <<" "<< sname <<" "<<i<<" "<<i+k<< endl;
                     }
 
@@ -117,10 +127,7 @@ int main()
     for (int i=0; i < (seq.length()-k+1); i++)
     {
         string kmer = "";
-        for (int j=i; j <= i+k-1; j++)
-        {
-            kmer = kmer + seq[j];
-        }
+        kmer = seq.substr(i, k);
          myfile2 << kmer <<" "<< sname <<" "<<i<<" "<<i+k<< endl;
     }
 
@@ -134,10 +141,11 @@ int main()
     firstSeq = true;
 
 
+
     LinkList querylist;
 
     ifstream queryfile ("query.txt");
-    ifstream dbfile ("db.txt");
+
 
 
     if (queryfile.is_open())
@@ -151,12 +159,9 @@ int main()
                     for (int i=0; i < (seq.length()-k+1); i++)
                     {
                         string kmer = "";
-                        for (int j=i; j <= i+k-1; j++)
-                        {
-                            kmer = kmer + seq[j];
-                        }
+                        kmer = seq.substr(i, k);
                         querylist.insert_node(kmer, sname, i, i+k);
-                        //dbfile << kmer <<" "<< sname <<" "<<i<<" "<<i+k<< endl;
+
                     }
 
                 }
@@ -175,6 +180,65 @@ int main()
     myfile.close();
     }
     else cout << "Unable to open file";
+
+    for (int i=0; i < (seq.length()-k+1); i++)
+    {
+        string kmer = "";
+        kmer = seq.substr(i, k);
+        querylist.insert_node(kmer, sname, i, i+k);
+    }
+
+
+    //Start and end point of query sequence
+    //Seq ID using the start and end of matched k-mers
+
+
+
+    //Testing Phase
+
+    cout<<"Checking for match\n\n\n";
+
+
+    cout<<"\n\n\nChecking for match\n\n\n";
+
+
+    //
+
+    int kmer_count = 0;//number of matching k-mers
+
+
+    for (int i=0; i<querylist.length; i++)
+    //cout<<"index is "<<querylist.gotonode(2).seq;
+    {
+        ifstream dbfile ("db.txt");
+        if (dbfile.is_open())
+        {
+            while (!dbfile.eof())
+            {
+                string tempseq;
+                string tempname;
+                int tempstart;
+                int tempend;
+
+                dbfile>>tempseq;
+                dbfile>>tempname;
+                dbfile>>tempstart;
+                dbfile>>tempend;
+
+                //cout<<i<<": "<<tempseq<<" with "<<querylist.gotonode(i).seq<<endl;
+                if (tempseq == querylist.gotonode(i).seq)
+                {
+                    cout<<tempseq<<" "<<tempname<<" "<<tempstart<<" "<<tempend<<endl;
+                }
+
+
+            }
+        cout<<"i is "<<i<<endl;
+    }
+    dbfile.close();
+    }
+
+
 
 
     querylist.print_all_records();
