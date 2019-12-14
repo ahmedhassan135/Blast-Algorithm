@@ -14,6 +14,6 @@ The query sequence is taken and k-mers generated and stored in a linked list.
 The k-mers in the linked list are then compared with the already stored k-mers in the database file.
 All the matched k-mers are stored in another linked list
 Their start and end points are noted and stored
-The whole list is parsed any k-mers that can be merged, are merged e.g one k-mer starts at 1 to 6 and another is 4 to 9 they are both merged to form 1 to 10 sequence k-mer, provided they belong to the same sequence in the database.
+The whole list is parsed any k-mers that can be merged, are merged e.g one k-mer starts at 1 to 6 and another is 4 to 9 they are both merged to form 1 to 9 sequence k-mer, provided they belong to the same sequence in the database.
 The results are this merging along will all other k-mers is stored in a file "matches.txt".
 The results are then compared with the original sequences db sequence and the corresponding required values are stored in the results file in a tabular form.
