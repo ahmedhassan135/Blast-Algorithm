@@ -1,9 +1,5 @@
 //For storing matched K-mers and their important information
 
-
-
-//For Breaking queries into k-mers and storing in Linklist
-
 #include <iostream>
 #include <cstring>
 
@@ -85,21 +81,55 @@ class LinkList2
 			cout<<"length is " << length;
 		}
 
-		void deleteNode(string seqVal, string Name, string Pname)
+		void deleteNode(string seqVal, string Name, string Pname)       //Deal with Length not changing
 		{
 		    node2 *tempptr = head;
-            //cout<<"\nreceived"<<tempptr->seq<<"."<<seqVal<<" "<<tempptr->name<<"."<<Name<<" "<<tempptr->pname<<"."<<Pname<<"."<<"\n";
-		    while (tempptr->seq != seqVal && tempptr->name != Name && tempptr->pname != Pname)
+            cout<<"\nreceived"<<tempptr->seq<<"."<<seqVal<<" "<<tempptr->name<<"."<<Name<<" "<<tempptr->pname<<"."<<Pname<<"."<<"\n";
+		    while (true)
 			{
+			    if (tempptr == NULL)
+                    return;
 			    cout<<"loop";
-				tempptr = tempptr->next;
+			    if (tempptr->seq == seqVal)
+                {
+                    if(tempptr->name == Name)
+                    {
+                        if(tempptr->pname == Pname)
+                        {
+                            break;
+                        }
+                    }
+                }
+                cout<<"step1";
+                if (tempptr->next)
+                    tempptr = tempptr->next;
+                cout<<"step2";
 			}
 
 			if (tempptr == head)
 			{
-			    head = tempptr->next;
-			    head->pre = NULL;
-			    delete tempptr;
+			    cout<<"step3";
+			    if (tempptr->next)
+                {
+                    head = tempptr->next;
+                    head->pre = NULL;
+                }
+                else
+                {
+                    head = NULL;
+                    tempptr = NULL;
+                }
+
+               // else
+                 //   head = NULL;
+                cout<<"step4";
+			   // if (head->pre)
+               //     head->pre = NULL;
+                cout<<"step5";
+               // if (tempptr)
+               //     tempptr = NULL;//delete tempptr;
+
+               // print_all_records();
 			    cout<<"\n\n\nDELEATED head\n\n\n";
 			}
 			else
@@ -113,6 +143,10 @@ class LinkList2
 
 		void generateResults()      //string Seq, string Name, int Start, int Ending, int PStart, int PEnding
 		{
+		    ofstream resultsfile ("results.txt");
+
+		    resultsfile << "Start of Query" <<"\t"<< "End of Query" <<"\t"<< "Total Length Query" <<"\t"<< endl;
+
             node2 *tempptr = head;
 
             int p=0,r=0;
@@ -132,7 +166,8 @@ class LinkList2
             while (head != NULL)
             {
                 //cout<<endl<<tempptr->seq<<endl;
-                if(tempptr->name == conname)
+
+                if(tempptr->name == conname && tempptr->next)
                 {
                     if(tempptr->pname == conpname)
                     {
@@ -186,37 +221,52 @@ class LinkList2
                     }
                     else
                         {
-                            cout<<"else Condition\n";
-                            cout<<"\ntemptr is "<<tempptr->seq<<endl;
-                            system("pause");
+                            //cout<<"else Condition\n";
+                            //cout<<"temptr in else is "<<tempptr->seq<<" "<<tempptr->name<<" "<<tempptr->pname<<endl;
+                            //system("pause");
+                            if (tempptr->next)
                             tempptr = tempptr->next;
-                            cout<<"\ntemptr is now "<<tempptr->seq<<endl;
+                            //cout<<"temptr is now "<<tempptr->seq<<" "<<tempptr->name<<" "<<tempptr->pname<<endl;
 
                         }
 
-                        cout<<"\nthe head is "<<head->seq<<" "<< head->name<<" "<<head->pname<<" next "<< head->next->seq<<endl;
-                        cout<<"temptr is "<<tempptr->seq<<endl;
-                        system("pause");
+                        //cout<<"\nthe head is "<<head->seq<<" "<< head->name<<" "<<head->pname<<" next "<< head->next->seq<<endl;
+                        //print_all_records();
+                        //cout<<"temptr after else is "<<tempptr->seq<<" "<<tempptr->name<<" "<<tempptr->pname<<endl;
+                        //system("pause");
                     //check incase head is deleted
                 }
                 else
                 {
                     //write to file;
-                    cout<<"seq\t"<<p<<" to "<<r<<endl;
+                    resultsfile << p <<"\t\t"<< r <<"\t\t"<< r-p <<"\t\t"<< endl;
+                    cout<<"MATCHED seq\t"<<p<<" to "<<r<<endl;
 
 
-                    system("pause");
+                    //system("pause");
 
 
                     //cout<<"\nthe head is "<<head->seq<<" "<< head->name<<" "<<head->pname<<" pre "<< head->pre->seq<<endl;
-                    system("pause");
+
 
                     p = head->pstart;
                     r = head->pending;
                     conname = head->name;
                     conpname = head->pname;
+
+
+
                     deleteNode(head->seq, conname, conpname);
+
+
                     tempptr = head;
+
+                    if (!head)
+                    {
+                        resultsfile << p <<"\t\t"<< r <<"\t\t"<< r-p <<"\t\t"<< endl;
+                    }
+
+                    //cout<<"temptr is in final "<<tempptr->seq<<" "<<tempptr->name<<" "<<tempptr->pname<<endl;
 
                     continue;
                 }
@@ -230,7 +280,7 @@ class LinkList2
 
                 //tempptr = tempptr->next;
             }
-
+            resultsfile.close();
 		}
 
 
