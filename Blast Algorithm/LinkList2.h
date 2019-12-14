@@ -127,9 +127,9 @@ class LinkList2
 
 		void generateResults()
 		{
-		    ofstream resultsfile ("results.txt");
+		    ofstream resultsfile ("matches.txt");
 
-		    resultsfile << "Start of Query" <<"\t"<< "End of Query" <<"\t"<< "Total Length Query" <<"\t"<< endl;
+		    //resultsfile << "Start of Query" <<"\t"<< "End of Query" <<"\t"<< "Total Length Query" <<"\t"<< endl;
 
             node2 *tempptr = head;
 
@@ -204,7 +204,8 @@ class LinkList2
                 else
                 {
                     //write to file;
-                    resultsfile << p <<"\t\t"<< r <<"\t\t"<< r-p <<"\t\t"<< endl;
+
+                    resultsfile <<conpname<<"\t\t"<<conname<<"\t\t"<< p <<"\t\t"<< r <<"\t\t"<< r-p <<"\t\t"<< endl;
                     cout<<"MATCHED seq\t"<<p<<" to "<<r<<endl;
 
                     p = head->pstart;
