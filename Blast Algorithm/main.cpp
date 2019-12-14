@@ -181,7 +181,10 @@ int main()
 
     matchlist.print_all_records();
     cout<<endl<<endl<<endl;
-    //matchlist.generateResults();
+
+
+
+    matchlist.generateResults();
 
 
     cout<<"\n\n\nExiting...\n";
