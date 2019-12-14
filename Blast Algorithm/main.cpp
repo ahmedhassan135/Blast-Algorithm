@@ -67,6 +67,8 @@ int main()
 
     cout<<"Finished Part 1...\n";
 
+    system("pause");
+
     seq = "";
     sname = "";
     firstSeq = true;
@@ -121,12 +123,7 @@ int main()
     }
 
 
-    //Start and end point of query sequence
-    //Seq ID using the start and end of matched k-mers
 
-
-
-    //Testing Phase
 
     cout<<"Checking for match\n\n\n";
 
@@ -134,14 +131,11 @@ int main()
     cout<<"\n\n\nChecking for match\n\n\n";
 
     LinkList2 matchlist;
-    //matchlist.print_all_records();
-    //
 
     int kmer_count = 0;//number of matching k-mers
 
     cout<<"seq\tname\tpname\tps\tpe\ts\te\n";
     for (int i=0; i<querylist.length; i++)
-    //cout<<"index is "<<querylist.gotonode(2).seq;
     {
         ifstream dbfile ("db.txt");
         if (dbfile.is_open())
@@ -159,7 +153,6 @@ int main()
                 dbfile>>tempend;
 
                 node returnedNode = querylist.gotonode(i);
-                //cout<<i<<": "<<tempseq<<" with "<<querylist.gotonode(i).seq<<endl;
                 if (tempseq == returnedNode.seq)       //push all the found k-mers in a linklist.
                 {
                     matchlist.insert_node(tempseq, returnedNode.name, tempname, returnedNode.start, returnedNode.ending, tempstart, tempend);
@@ -168,9 +161,8 @@ int main()
 
 
             }
-        //cout<<"i is "<<i<<endl;
     }
-    dbfile.close();                 //At the end of a query sequence being found write it into a table.
+    dbfile.close();
     }
 
 
