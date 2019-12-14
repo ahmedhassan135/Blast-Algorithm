@@ -2,79 +2,10 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
+#include "LinkList.h"
+#include "LinkList2.h"
 
 using namespace std;
-
-
-struct node
-		{
-			string seq;
-			string name;
-			int start;
-			int ending;
-			node *next;
-		};
-
-	class LinkList
-	{
-	    public:
-
-
-		node *head = NULL;
-		node *tail = NULL;
-
-		int length = 0;
-
-		node *insert_node(string Seq, string Name, int Start, int Ending)
-		{
-			node *newNode = new node;
-
-			newNode->seq = Seq;
-			newNode->name = Name;
-			newNode->start = Start;
-			newNode->ending = Ending;
-			newNode->next = NULL;
-
-
-			if (head == NULL)
-			{
-				head = newNode;
-				tail = newNode;
-				length = 1;
-				return newNode;
-			}
-
-
-			tail->next = newNode;
-			tail = newNode;
-			length++;
-			return newNode;
-		}
-
-        node gotonode(int index)
-        {
-            node *tempptr = head;
-            for (int i=1; i<=index;i++)
-            tempptr = tempptr->next;
-
-            return *tempptr;
-
-        }
-
-		void print_all_records()
-		{
-		    cout<<"\nprinting all records\n\n";
-			node *tempptr = head;
-			while (tempptr)
-			{
-				cout << tempptr->seq << ", " << tempptr->name <<", "<<tempptr->start<<", "<<tempptr->ending<<endl;
-				tempptr = tempptr->next;
-			}
-			cout<<"length is " << length;
-		}
-
-
-	};
 
 
 int main()
@@ -112,7 +43,7 @@ int main()
                 else
                     firstSeq = false;
 
-                sname = line.substr(1, line.length());
+                sname = line.substr(1, line.length()-1);
                 seq = "";
             }
             else
@@ -144,6 +75,7 @@ int main()
 
     LinkList querylist;
 
+
     ifstream queryfile ("query.txt");
 
 
@@ -169,7 +101,7 @@ int main()
                 else
                     firstSeq = false;
 
-                sname = line.substr(1, line.length());
+                sname = line.substr(1, line.length()-1);
                 seq = "";
             }
             else
@@ -201,12 +133,13 @@ int main()
 
     cout<<"\n\n\nChecking for match\n\n\n";
 
-
+    LinkList2 matchlist;
+    //matchlist.print_all_records();
     //
 
     int kmer_count = 0;//number of matching k-mers
 
-
+    cout<<"seq\tname\tpname\tps\tpe\ts\te\n";
     for (int i=0; i<querylist.length; i++)
     //cout<<"index is "<<querylist.gotonode(2).seq;
     {
@@ -225,23 +158,30 @@ int main()
                 dbfile>>tempstart;
                 dbfile>>tempend;
 
+                node returnedNode = querylist.gotonode(i);
                 //cout<<i<<": "<<tempseq<<" with "<<querylist.gotonode(i).seq<<endl;
-                if (tempseq == querylist.gotonode(i).seq)
+                if (tempseq == returnedNode.seq)       //push all the found k-mers in a linklist.
                 {
-                    cout<<tempseq<<" "<<tempname<<" "<<tempstart<<" "<<tempend<<endl;
+                    matchlist.insert_node(tempseq, returnedNode.name, tempname, returnedNode.start, returnedNode.ending, tempstart, tempend);
+                    cout<<tempseq<<"\t"<<returnedNode.name<<"\t"<<tempname<<"\t"<<tempstart<<"\t"<<tempend<<"\t"<<returnedNode.start<<"\t"<<returnedNode.ending<<endl;
                 }
 
 
             }
-        cout<<"i is "<<i<<endl;
+        //cout<<"i is "<<i<<endl;
     }
-    dbfile.close();
+    dbfile.close();                 //At the end of a query sequence being found write it into a table.
     }
 
 
 
+    //querylist.print_all_records();
 
-    querylist.print_all_records();
+
+
+    matchlist.print_all_records();
+    cout<<endl<<endl<<endl;
+    //matchlist.generateResults();
 
 
     cout<<"\n\n\nExiting...\n";
