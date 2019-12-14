@@ -7,6 +7,12 @@
 
 using namespace std;
 
+struct store
+{
+    string name;
+    string sequence;
+};
+
 
 int main()
 {
@@ -36,6 +42,7 @@ int main()
                         string kmer = "";
                         kmer = seq.substr(i, k);
                         myfile2 << kmer <<" "<< sname <<" "<<i<<" "<<i+k<< endl;
+
                     }
 
                 }
@@ -44,16 +51,24 @@ int main()
                     firstSeq = false;
 
                 sname = line.substr(1, line.length()-1);
+
+
+
                 seq = "";
             }
             else
             {
                 seq = seq + line;
+
+
+
+
             }
         }
     myfile.close();
     }
     else cout << "Unable to open file";
+
 
     for (int i=0; i < (seq.length()-k+1); i++)
     {
@@ -65,6 +80,45 @@ int main()
     myfile2.close();
 
 
+
+
+    ///////////////
+
+    string strtemp;
+
+    store array[50];
+    int arrindex = -1;
+
+    ifstream myfile3 ("fastadb.txt");
+     if (myfile3.is_open())
+    {
+        while (getline (myfile3,line))
+        {
+            if (line[0] == '>')
+            {
+                arrindex++;
+                array[arrindex].name = line.substr(1, line.length()-1);
+            }
+            else
+            {
+                array[arrindex].sequence = array[arrindex].sequence + line;
+            }
+
+        }
+    }
+
+    arrindex++;
+    myfile3.close();
+
+
+    for (int i = 0; i < arrindex; i++)
+    {
+        cout<< array[i].name<<": "<<array[i].sequence<<endl;
+    }
+
+
+
+////////////////////////////////////
     cout<<"Finished Part 1...\n";
 
     system("pause");
@@ -177,6 +231,42 @@ int main()
 
 
     matchlist.generateResults();
+
+
+    ifstream matchfile ("matches.txt");
+    ofstream resultfile ("results.txt");
+
+    resultfile <<"Query seq ID"<<"\t\t"<< "Start point query" <<"\t\t"<< "End point query" <<"\t\t"<< "length"<<"\t\t"
+                        <<"DB seq ID"<<"\t\t"<<"Start(Letter) DB seq"<<"\t\t"<<"End(Letter) DB seq"<< endl;
+
+    if (matchfile.is_open())
+    {
+        while (!matchfile.eof())
+            {
+                string tpname;
+                string tname;
+                int tempstart;
+                int tempend;
+                int tempsize;
+
+                matchfile>>tpname;
+                matchfile>>tname;
+                matchfile>>tempstart;
+                matchfile>>tempend;
+                matchfile>>tempsize;
+
+                for (int i = 0; i < arrindex; i++)
+                {
+                    if (array[i].name == tpname)
+                    {
+                        resultfile <<tname<<"\t\t\t"<< tempstart <<"\t\t\t\t"<< tempend <<"\t\t\t"<< tempend-tempstart<<"\t\t"
+                        <<tpname<<"\t\t\t"<<(array[i].sequence)[0]<<"\t\t\t\t"<<(array[i].sequence)[array[i].sequence.length()-1]<< endl;
+                    }
+                }
+
+
+            }
+    }
 
 
     cout<<"\n\n\nExiting...\n";
