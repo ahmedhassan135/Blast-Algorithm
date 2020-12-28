@@ -1,8 +1,8 @@
 # Blast-Algorithm
 
-Both part one and part two are written in the main.cpp
+BLAST is an algorithm and program for comparing primary biological sequence information, such as the amino-acid sequences of proteins or the nucleotides of DNA and/or RNA sequences.
 
-For the first part, the construction of k-mers a file "fastadb.txt" needs to be provided. The resulting k-mers will be 
+For the first part, the construction of k-mers a file "fastadb.txt" needs to be provided (Example provided). The resulting k-mers will be 
 stored in a file "db.txt". The variable k is initialized to '5' but it may be changed in the code according to the needs.
 
 For the second part, a file "query.txt" needs to be provided. This file will contain the list of query sequences. 
